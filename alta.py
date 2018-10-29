@@ -14,48 +14,54 @@ import psycopg2
 
 
 htmlFormat = '''
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <title>Sistemas Distribuidos</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
   </head>
   <body>
-    <div class="container" >
+    <div id="header" align="center">
+      <h1> Sistema de gestion de alumnos</h1>
+    </div>
+    <div class="container">
+      <div id="sidebar">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="alta.html">Alta</a></li>
+          <li><a href="modificacion.html">Modificacion</a></li>
+        </ul>
+      </div>
+      <div id="content" >
       <form action=/cgi-bin/punto2/alta.py method="post">
-        <fieldset>
-          <legend>Informacion Personal:</legend>
-
           Nombre y Apellido:<br>
           <input type="text" name="nombre" placeholder="Nombre y Apellido"/
                                  maxlength="70" autofocus required><br><br>
-
           Numero de Alumno/Legajo:<br>
           <input type="text" name="legajo" placeholder="9999999"/
                                            max="9999999" required><br><br>
-
           Sexo:<br>
           <select name="sexo" size="2">
             <option value="hombre">Hombre</option>
             <option value="mujer">Mujer</option>
           </select><br><br>
-
           Edad:<br>
           <input type="number" name="edad" min="1" max="99" required><br><br>
-
           Password:<br>
           <input type="password" name="password" required><br><br>
-
           <input type="submit" value="Aceptar">
           <input type="reset" value="Limpiar">
-
-        </fieldset>
       </form>
+      </div>
     </div>
-    <div id="container"></div>
+    <div align="center">
+      <footer class="footer" id="footer">
+        <p> Sistemas Distribuidos  - Aranda Perdomo</p>
+      </footer>
+    </div>
   </body>
-  <script>
-      alert("El alumno ha sido dado de alta");
-  </script>
 </html>
 '''
 
