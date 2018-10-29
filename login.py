@@ -13,6 +13,10 @@ import cgi
 import cgitb
 from collections import deque
 import psycopg2
+from Cookie import SimpleCookie
+from datetime import datetime, timedelta
+from hashlib import md5
+from os import environ
 
 head_html = '''
 <!DOCTYPE html>
@@ -167,21 +171,49 @@ def show_html(registro):
         sexo = parse_sexo_option(registro[2])
         edad = registro[3]
         password = registro[4]
+        _build_cookie();
+
         print(modificar_html % (nombre, legajo, sexo, edad, password))
     else:
         print(login_html)
 
+def _build_cookie(form):
+    """
+    Build a SimpleCookie object and returns the HTTP
+    Set-Cookie header.
+    """
+    cookie = SimpleCookie()
+    legajo = form.getvalue("legajo")
+    password = form.getvalue("password")
+    expiration_days = 1
+
+
+    # Username and Password (encrypt this one first).
+    cookie[name] = username + "|" + md5(password).hexdigest()
+    
+    # Expiration.
+    expires = datetime.now() + timedelta(days=expiration_days)
+    
+    # Morsel objects
+    # cookie[name]["domain"] = domain
+    cookie[name]["path"] = "/"
+    cookie[name]["expires"] = expires.strftime("%a, %d-%b-%Y "
+                                               "%H:%M:%S PST")
+    
+    # Return HTTP header (Set-Cookie).
+    print(cookie)
 
 def main():
     '''
     Intenta dar de alta el alumno y luego muestra
     el html
     '''
-    print('Content-Type: text/html')
-    print()
     form = cgi.FieldStorage()
     sys.stderr = sys.stdout
     cgitb.enable()
+    print('Content-Type: text/html')
+    _build_cookie(form);
+    print()
     print(head_html)
     show_html(obtener_datos(form))  # muestra contenido segun corresponda
     print(footer_html)
