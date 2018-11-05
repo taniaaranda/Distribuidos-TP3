@@ -1,0 +1,153 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial;
+    background: #adad85;
+}
+
+.header {
+    font-size: 20px;
+    text-align: center;
+    color:orange;
+    background:#333;
+}
+
+h1{
+  font-size:30px;
+  margin:0;
+  padding:0
+}
+
+h2 {
+  text-align:left;
+  margin-left:50%;
+  margin:0;
+  padding-bottom:10px;
+  color:black;
+  font-size: 18px;
+}
+.container {
+    border-radius: 5px;
+    background-color: #ccc;
+    padding: 10px;
+}
+
+.leftcolumn {
+    float: left;
+    width: 30%;
+}
+
+.rightcolumn {
+    float: left;
+    width: 60%;
+    padding-left: 10px;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  top: 10;
+  width: 100%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: orange;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  cursor:default;
+}
+.topnav a.active {
+  border-bottom:#FE5010;
+}
+.navbar a:hover {
+  border-bottom: solid orange;
+}
+
+#targetDiv{
+overflow:scroll;
+width:80%;
+height:300px;
+padding-left: 15px;
+border-style:solid ;
+border-color: #FE5010;
+}
+
+#users_div{
+width:80%;
+height:380px;
+padding: 15px;
+border-style:solid ;
+border-color: #FE5010;
+resize: none;
+}
+
+#usrText{
+width:80%;
+margin-bottom: 7px;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  background-color: rgba(0,0,0,0.4);
+  width: 100%;
+  height:100%;
+  left: 0;
+  top: 0;
+  padding: 20px;
+  border: 1px solid #888;
+  overflow:auto;
+}
+
+.modal-content {
+    background-color: #ffb84d;
+    margin: 5% auto 15% auto;
+    padding: 20px;
+    border: 1px solid #333;
+    width: 80%;
+}
+
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color:orange;
+  font-size: 35px;
+  font-weight: bold;
+}
+.close:hover,.close:focus{
+  color:#FE5010;
+  cursor: pointer;
+}
+
+input[type=submit] {
+  font-family: "Montserrat", sans-serif;
+  color:orange;
+  background-color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+input[type=submit]:hover {
+  opacity: 0.8;
+  cursor:pointer;
+}
+
