@@ -19,44 +19,12 @@ htmlFormat = '''
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-  </head>
-  <body>
-    <div class="container" >
-      <form action=/cgi-bin/punto2/alta.py method="post">
-        <fieldset>
-          <legend>Informacion Personal:</legend>
-
-          Nombre y Apellido:<br>
-          <input type="text" name="nombre" placeholder="Nombre y Apellido"/
-                                 maxlength="70" autofocus required><br><br>
-
-          Numero de Alumno/Legajo:<br>
-          <input type="text" name="legajo" placeholder="9999999"/
-                                           max="9999999" required><br><br>
-
-          Sexo:<br>
-          <select name="sexo" size="2">
-            <option value="hombre">Hombre</option>
-            <option value="mujer">Mujer</option>
-          </select><br><br>
-
-          Edad:<br>
-          <input type="number" name="edad" min="1" max="99" required><br><br>
-
-          Password:<br>
-          <input type="password" name="password" required><br><br>
-
-          <input type="submit" value="Aceptar">
-          <input type="reset" value="Limpiar">
-
-        </fieldset>
-      </form>
-    </div>
-    <div id="container"></div>
-  </body>
+    <meta http-equiv="refresh" content="0;
+      url=http://localhost/punto2/login.html" />
   <script>
       alert("El alumno ha sido modificado");
   </script>
+  </head>
 </html>
 '''
 

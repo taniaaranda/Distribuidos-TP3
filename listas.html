@@ -20,27 +20,22 @@
         </ul>
       </div>
       <div id="content" >
-      <h2> Crear sesion </h2>
-      <form action=/cgi-bin/punto2/alta.py method="post">
-          Nombre y Apellido:<br>
-          <input type="text" name="nombre" placeholder="Nombre y Apellido"/
-                                 maxlength="70" autofocus required><br><br>
-          Numero de Alumno/Legajo:<br>
-          <input type="text" name="legajo" placeholder="9999999"/
-                                           max="9999999" required><br><br>
+        <h2>Totales</h2>
+        <form action=/cgi-bin/punto2/listas.py method="post">
+          <br>Seleccione el rango de edad:<br>
+          <select name="intervalo" size=3 required>
+            <option value="primer_grupo">Menores de 20</option>
+            <option value="segundo_grupo">20-40</option>
+            <option value="tercer_grupo">Mayores de 40</option>
+          </select>
+          <br><br>
           Sexo:<br>
           <select name="sexo" size="2" required>
             <option value="hombre">Hombre</option>
             <option value="mujer">Mujer</option>
           </select><br><br>
-          Edad:<br>
-          <input type="number" name="edad" min="1" max="99" required><br><br>
-          Password:<br>
-          <input type="password" name="password" placeholder="Ingresa clave"
-                                                  required><br><br>
-          <input type="submit" value="Aceptar">
-          <input type="reset" value="Limpiar">
-      </form>
+         <input type="submit" value="Aceptar">
+        </form>
       </div>
     </div>
     <div align="center">
@@ -50,3 +45,4 @@
     </div>
   </body>
 </html>
+

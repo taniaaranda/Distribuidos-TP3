@@ -20,7 +20,8 @@ htmlFormat = '''
   <head>
     <meta charset="UTF-8">
     <title>Sistemas Distribuidos</title>
-    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <link rel="stylesheet" href="http://localhost/punto2/css/main.css"
+        type="text/css">
   </head>
   <body>
     <div id="header" align="center">
@@ -29,13 +30,17 @@ htmlFormat = '''
     <div class="container">
       <div id="sidebar">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="alta.html">Alta</a></li>
-          <li><a href="modificacion.html">Modificacion</a></li>
+          <li><a href="http://localhost/punto2/index.html">Home</a></li>
+          <li><a href="http://localhost/punto2/alta.html">Alta</a></li>
+          <li><a href="http://localhost/punto2/login.html">
+                            Modificacion</a></li>
+          <li><a href="http://localhost/punto2/busquedas.html">Busquedas</a>
+          </li>
+          <li><a href="http://localhost/punto2/listas.html">Totales</a></li>
         </ul>
       </div>
       <div id="content" >
-      <form action=/cgi-bin/punto2/alta.py method="post">
+        <form action=/cgi-bin/punto2/alta.py method="post">
           Nombre y Apellido:<br>
           <input type="text" name="nombre" placeholder="Nombre y Apellido"/
                                  maxlength="70" autofocus required><br><br>
@@ -53,7 +58,7 @@ htmlFormat = '''
           <input type="password" name="password" required><br><br>
           <input type="submit" value="Aceptar">
           <input type="reset" value="Limpiar">
-      </form>
+        </form>
       </div>
     </div>
     <div align="center">
