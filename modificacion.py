@@ -19,12 +19,13 @@ htmlFormat = '''
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0;
-      url=http://localhost/punto2/login.html" />
+    <title>Redirigiendo..</title>
+    <meta http-equiv="refresh" content="0;url=/punto2" />'
   <script>
-      alert("El alumno ha sido modificado");
+      alert("El alumno ha sido modificado!");
   </script>
   </head>
+  <body></body>
 </html>
 '''
 

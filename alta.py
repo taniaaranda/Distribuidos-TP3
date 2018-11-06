@@ -19,54 +19,13 @@ htmlFormat = '''
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Sistemas Distribuidos</title>
-    <link rel="stylesheet" href="http://localhost/punto2/css/main.css"
-        type="text/css">
+    <title>Redirigiendo..</title>
+    <meta http-equiv="refresh" content="0;url=/punto2" />'
+  <script>
+      alert("El alumno ha sido creado!");
+  </script>
   </head>
-  <body>
-    <div id="header" align="center">
-      <h1> Sistema de gestion de alumnos</h1>
-    </div>
-    <div class="container">
-      <div id="sidebar">
-        <ul>
-          <li><a href="http://localhost/punto2/index.html">Home</a></li>
-          <li><a href="http://localhost/punto2/alta.html">Alta</a></li>
-          <li><a href="http://localhost/punto2/login.html">
-                            Modificacion</a></li>
-          <li><a href="http://localhost/punto2/busquedas.html">Busquedas</a>
-          </li>
-          <li><a href="http://localhost/punto2/listas.html">Totales</a></li>
-        </ul>
-      </div>
-      <div id="content" >
-        <form action=/cgi-bin/punto2/alta.py method="post">
-          Nombre y Apellido:<br>
-          <input type="text" name="nombre" placeholder="Nombre y Apellido"/
-                                 maxlength="70" autofocus required><br><br>
-          Numero de Alumno/Legajo:<br>
-          <input type="text" name="legajo" placeholder="9999999"/
-                                           max="9999999" required><br><br>
-          Sexo:<br>
-          <select name="sexo" size="2">
-            <option value="hombre">Hombre</option>
-            <option value="mujer">Mujer</option>
-          </select><br><br>
-          Edad:<br>
-          <input type="number" name="edad" min="1" max="99" required><br><br>
-          Password:<br>
-          <input type="password" name="password" required><br><br>
-          <input type="submit" value="Aceptar">
-          <input type="reset" value="Limpiar">
-        </form>
-      </div>
-    </div>
-    <div align="center">
-      <footer class="footer" id="footer">
-        <p> Sistemas Distribuidos  - Aranda Perdomo</p>
-      </footer>
-    </div>
-  </body>
+  <body></body>
 </html>
 '''
 
