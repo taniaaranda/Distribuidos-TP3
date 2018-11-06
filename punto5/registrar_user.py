@@ -28,7 +28,7 @@ def main():
     else:
         with open("/tmp/usuarios.txt", 'a+') as f:
             # mode a+ crea el archivo si no existe
-            f.write(user)
+            f.writelines("%s\n" % user)
         f.close()
 
 
