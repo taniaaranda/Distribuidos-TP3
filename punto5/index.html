@@ -15,10 +15,8 @@ function setCookie(usuario,estado){
 }
 
 function getCookie(cookie_name) {
-  /*
-     document.cookie tiene todas las cookies que posee el browser en
-     forma de string nombreCookie1=valor1; nombreCookie2=valor2
-     */
+     //document.cookie tiene todas las cookies que posee el browser en
+     //forma de string nombreCookie1=valor1; nombreCookie2=valor2
   var name = cookie_name + "=";
   //handle cookies with special characters
   var decodedCookie = decodeURIComponent(document.cookie);
@@ -35,14 +33,14 @@ function getCookie(cookie_name) {
   return ""; //cookie not found
 }
 
-function loginUser(){ 
+function loginUser(){
   //check cookie
   var username = document.getElementById('username');
   var cookie = getCookie(username.value);
   if (cookie!=""){
     alert("Bienvenido "+username);
     //alert(document.cookie);
-  }else{ 
+  }else{
     alert("No tienes cookie");
   }
 
@@ -60,6 +58,7 @@ function logoutUser(){
   alert('Adios '+username.value);
 }
 
+ 
 function registrarUser(usrText,targetDiv,users_div,nombre_user){
 //function registrarUser(){
   var texto = document.getElementById(usrText);
@@ -69,27 +68,26 @@ function registrarUser(usrText,targetDiv,users_div,nombre_user){
   var reqObj = getReqObj();
   setCookie(username.value,'activo');
 
-  var url="cgi-bin/punto5/registrar_user.py?newtxt="+escape(username.value);
+  var url="/cgi-bin/punto5/registrar_user.py?newtxt="+escape(username.value);
   reqObj.open("GET", url, false);
   reqObj.send(null);
-  if (reqObj.responseText == "<p>error</p>"){
-    alert("Ha ocurrido un error!. Intenta vuevamente");
-  }else if (reqObj.responseText == "<p>ya existe</p>"){
+  //alert(reqObj.responseText);
+  if ((reqObj.responseText) == ("<p>error</p>"))
+  {
     alert("Ya existe el usuario");
   }else{
-    alert("Respuesta piolaa!");
     users.innerHTML = unescape(reqObj.responseText); //lo hace submitHandler??
     users.scrollTop = users.scrollHeight;
     submitHandler(texo, target); //PRUEBA -- SINO CON usrText,targetDiv
     //texto.disabled=false; //habilito escritura en chat
-    var entorno = setInterval(function(){actualizar()},1000);
+    //var entorno = setInterval(function(){actualizar()},1000);
   }
 }
 
 function actualizarConversacion(){
   var conversacion = document.getElementById('divID');
   var reqObj = getReqObj();
-  var url="/cgi-bin/punto_5/actualizar_conversacion";
+  var url="/cgi-bin/punto_5/actualizar_conversacion.py";
   reqObj.open("GET", url, false);
   reqObj.send(null);
   conversacion.innerHTML = unescape(reqObj.responseText);
@@ -126,7 +124,7 @@ function submitHandler(txtID, divID)
   var theText = document.getElementById(txtID);
   var theArea = document.getElementById(divID);
   var reqObj = getReqObj();
-  var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + theText.value + "</p>");
+  var url="/cgi-bin/punto5/registrar_user.py?newtxt=" + escape("<p>" + theText.value + "</p>");
   reqObj.open("GET", url, false);
   reqObj.send(null);
   theArea.innerHTML = unescape(reqObj.responseText);
