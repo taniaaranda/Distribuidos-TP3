@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <title>Sistemas Distribuidos</title>
     <link rel="stylesheet" href="css/main.css" type="text/css">
-    <!--script type="text/javascript" src="javascript/main.js"></script-->
     <script>
 
 function setCookie(usuario,estado){
-
+  //estado in [true, false]
   var expiracion = new Date();
   expiracion.setDate(expiracion.getDate()+1); //la cookie dura un dia
-  document.cookie = usuario + "=" + escape(estado) + "; expires=" +expiracion.toGMTString()+"; path=/";
+  document.cookie = usuario + "=" + estado + "; expires=" +expiracion.toGMTString()+"; path=/";
 }
 
 function getCookie(cookie_name) {
-     //document.cookie tiene todas las cookies que posee el browser en
-     //forma de string nombreCookie1=valor1; nombreCookie2=valor2
+  //document.cookie tiene todas las cookies que posee el browser en
+  //forma de string nombreCookie1=valor1; nombreCookie2=valor2
+  //Los nombres de las cookies son username y valor booleano
+  //ejemplo = "pepe=true; maria=true"
   var name = cookie_name + "=";
   //handle cookies with special characters
   var decodedCookie = decodeURIComponent(document.cookie);
@@ -33,80 +34,39 @@ function getCookie(cookie_name) {
   return ""; //cookie not found
 }
 
-function loginUser(){
-  //check cookie
-  var username = document.getElementById('username');
-  var cookie = getCookie(username.value);
-  if (cookie!=""){
-    alert("Bienvenido "+username);
-    //alert(document.cookie);
-  }else{
-    alert("No tienes cookie");
-  }
-
-}
-
 
 function logoutUser(){
   var users = document.getElementById('users_div');
   var username = document.getElementById('username');
-  setCookie(username.value,'inactivo');
-
   users.innerHTML = unescape(reqObj.responseText); //lo hace submitHandler??
   users.scrollTop = users.scrollHeight;
-
-  alert('Adios '+username.value);
+  setCookie(username.value,'false');
 }
 
  
-function registrarUser(usrText,targetDiv,users_div,nombre_user){
-//function registrarUser(){
+function registrarUser(usrText,targetDiv,users_div){
   var texto = document.getElementById(usrText);
   var target = document.getElementById(targetDiv);
   var users = document.getElementById(users_div);
-  var username = document.getElementById(nombre_user);
+  var user = document.getElementById('user').value;
   var reqObj = getReqObj();
-  setCookie(username.value,'activo');
-
-  var url="/cgi-bin/punto5/registrar_user.py?newtxt="+escape(username.value);
+  var url="/cgi-bin/punto5/registrar_user.py?newtxt="+escape(user);
   reqObj.open("GET", url, false);
   reqObj.send(null);
-  //alert(reqObj.responseText);
   if ((reqObj.responseText) == ("<p>error</p>"))
   {
     alert("Ya existe el usuario");
-  }else{
+  }else{ 
+    //alert("Hola "+user+"!!");
+    document.getElementById('username').value = user; //set label
+    setCookie(user,'true'); 
+    alert("Hola "+document.getElementById('username').value+"!!");
     users.innerHTML = unescape(reqObj.responseText); //lo hace submitHandler??
     users.scrollTop = users.scrollHeight;
-    submitHandler(texo, target); //PRUEBA -- SINO CON usrText,targetDiv
-    //texto.disabled=false; //habilito escritura en chat
+    submitHandler(usrText, targetDiv);
+    texto.disabled=false; //habilito escritura en chat
     //var entorno = setInterval(function(){actualizar()},1000);
   }
-}
-
-function actualizarConversacion(){
-  var conversacion = document.getElementById('divID');
-  var reqObj = getReqObj();
-  var url="/cgi-bin/punto_5/actualizar_conversacion.py";
-  reqObj.open("GET", url, false);
-  reqObj.send(null);
-  conversacion.innerHTML = unescape(reqObj.responseText);
-  conversacion.scrollTop = conversacion.scrollHeight;
-}
-
-function actualizarUsers(){
-  var users = getElementById('users_div');
-  var reqObj = getReqObj();
-  var url="cgi-bin/punto5/actualizar_users.py";
-  reqObj.open("GET", url, false);
-  reqObj.send(null);
-  users.innerHTML = unescape(reqObj.responseText);//innecesario?
-  users.scrollTop = users.scrollHeight;
-}
-
-function actualizar(){
-  actualizarUsers();
-  actualizarConversacion();
 }
 
 function getReqObj() {
@@ -123,8 +83,14 @@ function submitHandler(txtID, divID)
 {
   var theText = document.getElementById(txtID);
   var theArea = document.getElementById(divID);
+  var username = document.getElementById('username');
   var reqObj = getReqObj();
-  var url="/cgi-bin/punto5/registrar_user.py?newtxt=" + escape("<p>" + theText.value + "</p>");
+  if (username.value!=""){ 
+    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + username.value +":"+ theText.value + "</p>");
+  }else{
+    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + theText.value + "</p>");
+
+  }
   reqObj.open("GET", url, false);
   reqObj.send(null);
   theArea.innerHTML = unescape(reqObj.responseText);
@@ -143,13 +109,31 @@ window.onload=function()
   </head>
   <body>
     <h1>Sistemas Distrbuidos</h1>
-    <div class="header">
-      <div class="navbar">
-        <a id="login" onclick="document.getElementById('loginmodal').style.display='block'" style="width:auto;">Login</a>
-        <a id="logout" onclick="logoutUser()"> Log Out</a>
-        <a id="signup" onclick="document.getElementById('signupmodal').style.display='block'" style="width:auto;">Sign Up</a>
+
+    <div id="signupmodal" class="modal">
+      <div class="modal-content">
+        <h1>Sign Up</h1>
+        <span onclick="document.getElementById('signupmodal').style.display=
+              'none'" class="close" title="Close">&times;</span>
+        <form id="signupform" name="signupform" method="post">
+          <label>Username:</label>
+          <input type="text" id="user" placeholder="Nombre de usuario"
+                                             required>
+          <input type="submit" name="signup-btn" id="signup-btn" value="SignUp" onclick="registrarUser('usrText','targetDiv','users_div')" align="center">
+        </form>
       </div>
     </div>
+
+    <div class="header">
+      <div class="navbar">
+        <a id="signup" onclick="document.getElementById('signupmodal').style.display='block'" style="width:auto;">Sign Up</a>
+        <a id="logout" onclick="logoutUser('username')"> Log Out</a>
+        <input id="username" value="" disabled />
+      </div>
+    </div>
+
+
+
     <div class="container">
       <div class="row">
         <div class="rightcolumn">
@@ -158,7 +142,6 @@ window.onload=function()
           <div>
             <form name="forinput" onsubmit="return submitHandler('usrText','targetDiv')">
               <input type="text" placeholder="Ingrese Texto" id="usrText" >
-              <!-- habilito cuando el user se loguea-->
             </form>
           </div>
         </div>
@@ -174,37 +157,8 @@ window.onload=function()
       </footer>
     </div>
 
-    <div id="loginmodal" class="modal">
-      <div class="modal-content">
-        <h1>Login</h1>
-        <span onclick="document.getElementById('loginmodal').style.display=
-              'none'" class="close" title="Close">&times;</span>
-        <form id="loginform" name="loginform" method="post">
-          <label for="username">Username:</label>
-          <input type="text" name="username" placeholder="Nombre de usuario"
-                                             required>
-          <input type="submit" name="login-btn" id="login-btn" value="Login"
-                                                               onsubmit="loginUser()" align="center">
-          <!-- onsubmit="registrarUser('usrText','targetDiv','users_div',
-            'username')" align="center"-->
-        </form>
-      </div>
-    </div>
 
-    <div id="signupmodal" class="modal">
-      <div class="modal-content">
-        <h1>Sign Up</h1>
-        <span onclick="document.getElementById('signupmodal').style.display=
-              'none'" class="close" title="Close">&times;</span>
-        <form id="signupform" name="signupform" method="post">
-          <label for="username">Username:</label>
-          <input type="text" id="username" placeholder="Nombre de usuario"
-                                             required>
-          <input type="submit" name="signup-btn" id="signup-btn" value="SignUp" onclick="registrarUser('usrText','targetDiv','users_div', 'username')" align="center">
-        </form>
-      </div>
-    </div>
-
+  
 
   </body>
 </html>
