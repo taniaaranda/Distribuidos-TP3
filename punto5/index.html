@@ -3,13 +3,18 @@
   <head>
     <meta charset="UTF-8">
     <title>Sistemas Distribuidos</title>
-    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <link rel="stylesheet" href="/punto5/css/main.css" type="text/css">
     <script>
 
 function setCookie(usuario,estado){
   //estado in [true, false]
   var expiracion = new Date();
-  expiracion.setDate(expiracion.getDate()+1); //la cookie dura un dia
+  if (estado == 'true'){
+    expiracion.setDate(expiracion.getDate()+1); //la cookie dura un dia
+  }else{
+    expiracion.setDate(expiracion.getDate()-1); //mato la cookie
+  }
+
   document.cookie = usuario + "=" + estado + "; expires=" +expiracion.toGMTString()+"; path=/";
 }
 
@@ -18,30 +23,81 @@ function getCookie(cookie_name) {
   //forma de string nombreCookie1=valor1; nombreCookie2=valor2
   //Los nombres de las cookies son username y valor booleano
   //ejemplo = "pepe=true; maria=true"
+  if (document.cookie.length>0){
   var name = cookie_name + "=";
   //handle cookies with special characters
   var decodedCookie = decodeURIComponent(document.cookie);
-  var cookie_array = decodedCookie.split(';');
-  for(var i = 0; i <cookie_array.length; i++) {
-    var c = cookie_array[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length); //retorno valor de cookie
+  inicio = decodedCookie.indexOf(name);
+  if (inicio != -1){
+    inicio = inicio + name.length; //me posiciono despues de name=
+    final = decodedCookie.indexOf(";",inicio);
+    if (final==-1) final = decodedCookie.length;//es el final de la cookie
+    return unescape(decodedCookie.substring(inicio,final)); //retorno valor de cookie
     }
   }
   return ""; //cookie not found
 }
 
+function getCookieName(){
+  //supongo que el ultimo nombre es el buscado
+  if (document.cookie.length>0){
+    var decodedCookie = decodeURIComponent(document.cookie);
+    inicio  = decodedCookie.lastIndexOf(";")+1; //si no encontro inicio = 0
+    final = decodedCookie.lastIndexOf("=");
+    return unescape(decodedCookie.substring(inicio,final));
+  }
+  return "";
+}
 
 function logoutUser(){
   var users = document.getElementById('users_div');
-  var username = document.getElementById('username');
-  users.innerHTML = unescape(reqObj.responseText); //lo hace submitHandler??
-  users.scrollTop = users.scrollHeight;
-  setCookie(username.value,'false');
+  var user = getCookieName();
+  var reqObj = getReqObj();
+  var url="/cgi-bin/punto5/eliminar_user.py?newtxt="+escape(user);
+  reqObj.open("GET", url, false);
+  reqObj.send(null);
+  //users.innerHTML = unescape(reqObj.responseText); //lo hace submitHandler??
+  users.innerHTML = unescape('');
+  setCookie(user,'false');
+  texto.disabled=true; //habilito escritura en chat 
+  document.getElementById('username').value = "";
 }
+
+function actualizarConversacion(){
+  var conversacion = document.getElementById('targetDiv');
+  var reqObj = getReqObj();
+  var url="/cgi-bin/punto5/actualizar_conversacion.py";
+  reqObj.open("GET", url, false);
+  reqObj.send(null);
+  conversacion.innerHTML = unescape(reqObj.responseText);
+  conversacion.scrollTop = conversacion.scrollHeight;
+}
+
+
+function actualizarUsers(){
+  var sesion = document.getElementById("users_div");
+  var reqObj = getReqObj();
+  var url="/cgi-bin/punto5/actualizar_users.py";
+  reqObj.open("GET", url, false);
+  reqObj.send(null);
+  sesion.innerHTML = unescape(reqObj.responseText);
+  sesion.scrollTop = sesion.scrollHeight;
+}
+
+/*
+function actualizarContent(){
+  user = getCookieName();
+  document.getElementById('username').value = user; //set label
+}
+*/
+
+function actualizar(){
+  actualizarUsers();
+  actualizarConversacion();
+  //actualizarContent(){
+}
+
+
 
  
 function registrarUser(usrText,targetDiv,users_div){
@@ -53,19 +109,19 @@ function registrarUser(usrText,targetDiv,users_div){
   var url="/cgi-bin/punto5/registrar_user.py?newtxt="+escape(user);
   reqObj.open("GET", url, false);
   reqObj.send(null);
-  if ((reqObj.responseText) == ("<p>error</p>"))
+  if (unescape(reqObj.responseText) === "error")
   {
     alert("Ya existe el usuario");
   }else{ 
-    //alert("Hola "+user+"!!");
-    document.getElementById('username').value = user; //set label
     setCookie(user,'true'); 
-    alert("Hola "+document.getElementById('username').value+"!!");
+    document.getElementById('username').value = getCookieName(); //set label
+    alert("Bienvenido "+ getCookieName());
     users.innerHTML = unescape(reqObj.responseText); //lo hace submitHandler??
     users.scrollTop = users.scrollHeight;
     submitHandler(usrText, targetDiv);
     texto.disabled=false; //habilito escritura en chat
-    //var entorno = setInterval(function(){actualizar()},1000);
+    
+    var entorno = setInterval(function(){actualizar()},1000);
   }
 }
 
@@ -83,13 +139,12 @@ function submitHandler(txtID, divID)
 {
   var theText = document.getElementById(txtID);
   var theArea = document.getElementById(divID);
-  var username = document.getElementById('username');
+  var username = getCookieName();
   var reqObj = getReqObj();
-  if (username.value!=""){ 
-    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + username.value +":"+ theText.value + "</p>");
+  if (username!=""){ 
+    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + username +":"+ theText.value + "</p>");
   }else{
-    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + theText.value + "</p>");
-
+    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + theText.value + "</p>"); 
   }
   reqObj.open("GET", url, false);
   reqObj.send(null);
@@ -110,25 +165,12 @@ window.onload=function()
   <body>
     <h1>Sistemas Distrbuidos</h1>
 
-    <div id="signupmodal" class="modal">
-      <div class="modal-content">
-        <h1>Sign Up</h1>
-        <span onclick="document.getElementById('signupmodal').style.display=
-              'none'" class="close" title="Close">&times;</span>
-        <form id="signupform" name="signupform" method="post">
-          <label>Username:</label>
-          <input type="text" id="user" placeholder="Nombre de usuario"
-                                             required>
-          <input type="submit" name="signup-btn" id="signup-btn" value="SignUp" onclick="registrarUser('usrText','targetDiv','users_div')" align="center">
-        </form>
-      </div>
-    </div>
 
     <div class="header">
       <div class="navbar">
         <a id="signup" onclick="document.getElementById('signupmodal').style.display='block'" style="width:auto;">Sign Up</a>
         <a id="logout" onclick="logoutUser('username')"> Log Out</a>
-        <input id="username" value="" disabled />
+        <input id="username" value="" disabled></input>
       </div>
     </div>
 
@@ -141,7 +183,8 @@ window.onload=function()
           <div id="targetDiv"></div>
           <div>
             <form name="forinput" onsubmit="return submitHandler('usrText','targetDiv')">
-              <input type="text" placeholder="Ingrese Texto" id="usrText" >
+              <input type="text" placeholder="Ingrese Texto" id="usrText"
+                                                             autofocus disabled>
             </form>
           </div>
         </div>
@@ -158,7 +201,36 @@ window.onload=function()
     </div>
 
 
+    <div id="signupmodal" class="modal">
+      <div class="modal-content">
+        <h1>Sign Up</h1>
+        <span onclick="document.getElementById('signupmodal').style.display=
+              'none'" class="close" title="Close">&times;</span>
+        <form id="signupform" name="signupform" method="GET"
+                onsubmit="registrarUser('usrText','targetDiv','users_div')">
+          <label>Username:</label>
+          <input type="text" id="user" placeholder="Nombre de usuario"
+                               autofocus required>
+          <input type="submit" id="signup-btn" value="SignUp"  align="center">
+          <!--input type="submit" name="signup-btn" id="signup-btn" value="SignUp" onclick="registrarUser('usrText','targetDiv','users_div')" align="center"-->
+
+        </form>
+      </div>
+    </div>
   
+	<script type="text/javascript">
+    var texto = document.getElementById('usrText');
+    var user = getCookieName();
+    var cookie = getCookie(user);
+    //var entorno = setInterval(actualizar, 1000);
+    if (cookie == 'true'){ //entonces existe user
+      document.getElementById('username').value = user;  //set label 
+      texto.disabled=false;
+      var entorno = setInterval(function(){actualizar()},1000);
+    }else{
+      logoutUser();
+    }
+    </script>
 
   </body>
 </html>

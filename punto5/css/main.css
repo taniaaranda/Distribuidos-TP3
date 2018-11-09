@@ -75,6 +75,14 @@ h2 {
   border-bottom: solid orange;
 }
 
+#username{ 
+  font-family: "Montserrat", sans-serif;
+  color: orange;
+  background-color:#333;
+  text-align: center;
+}
+
+
 #targetDiv{
 overflow:scroll;
 width:80%;

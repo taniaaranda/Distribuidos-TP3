@@ -6,7 +6,7 @@ import cgi
 
 def existe_usuario(usuario):
     try:
-        with open("/tmp/usuarios.txt", "r") as f:
+        with open("data/usuarios.txt", "r") as f:
             for line in f:
                 if(line.find(usuario) != -1):
                     f.close()
@@ -24,9 +24,9 @@ def main():
     query = data.getvalue('newtxt')
     user = str(query)
     if(existe_usuario(user)):
-        print("<p>error</p>")
+        print("error")
     else:
-        with open("/tmp/usuarios.txt", 'a+') as f:
+        with open("data/usuarios.txt", 'a+') as f:
             # mode a+ crea el archivo si no existe
             f.writelines("%s\n" % user)
         f.close()
