@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Sistemas Distribuidos</title>
-    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <link rel="stylesheet" href="/punto2/css/main.css" type="text/css">
   </head>
   <body>
     <div id="header" align="center">
@@ -12,16 +12,16 @@
     <div class="container">
       <div id="sidebar">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="alta.html">Alta</a></li>
-          <li><a href="login.html">Modificacion</a></li>
-          <li><a href="busquedas.html">Busquedas</a></li>
-          <li><a href="listas.html">Totales</a></li>
+          <li><a href="/punto2">Home</a></li>
+          <li><a href="/punto2/alta.html">Alta</a></li>
+          <li><a href="/punto2/login.html">Modificacion</a></li>
+          <li><a href="/punto2/busquedas.html">Busquedas</a></li> 
+          <li><a href="/punto2/listas.html">Totales</a></li>
         </ul>
       </div>
       <div id="content" >
         <h2>Totales</h2>
-        <form action=/cgi-bin/punto2/listas.py method="post">
+        <form action="/cgi-bin/punto2/listas.py" method="post">
           <br>Seleccione el rango de edad:<br>
           <select name="intervalo" size=3 required>
             <option value="primer_grupo">Menores de 20</option>
@@ -38,6 +38,7 @@
         </form>
       </div>
     </div>
+
     <div align="center">
       <footer class="footer" id="footer">
         <p> Sistemas Distribuidos  - Aranda Perdomo</p>
