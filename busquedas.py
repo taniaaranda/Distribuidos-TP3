@@ -13,32 +13,9 @@ from collections import deque
 import psycopg2
 
 head_html = '''
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Sistemas Distribuidos</title>
-    <link rel="stylesheet" href="http://localhost/punto2/css/main.css"
-        type="text/css">
-  </head>
-  <body>
-    <div id="header" align="center">
-      <h1> Sistema de gestion de alumnos</h1>
-    </div>
-    <div class="container">
-      <div id="sidebar">
-        <ul>
-          <li><a href="http://localhost/punto2/index.html">Home</a></li>
-          <li><a href="http://localhost/punto2/alta.html">Alta</a></li>
-          <li><a href="http://localhost/punto2/login.html">
-                            Modificacion</a></li>
-          <li><a href="http://localhost/punto2/busquedas.html">Busquedas</a>
-          </li>
-          <li><a href="http://localhost/punto2/listas.html">Totales</a></li>
-        </ul>
-      </div>
-      <div id="content" >
-        <table>
+    <a href="/punto2">Click para voler al index</a>
+    <hr width="80%" size=3 align="left" noshade>
+    <table border="1"cellpadding = "3" cellspacing = "3">
           <tr>
             <th>Nombre</th>
             <th>Legajo</th>
@@ -49,17 +26,8 @@ head_html = '''
 
 
 footer_html = '''
-      </table>
-    </div>
-    <div align="center">
-      <footer class="footer" id="footer">
-        <p> Sistemas Distribuidos  - Aranda Perdomo</p>
-      </footer>
-    </div>
-  </body>
-</html>
-
-'''
+    </table>
+ '''
 
 encontre_html = '''
 <tr>
@@ -70,8 +38,6 @@ encontre_html = '''
 </tr>
 '''
 
-no_encontre_html = '''
-'''
 
 select_sql = '''
 SELECT * FROM alumno WHERE %s
@@ -143,7 +109,8 @@ def get_cond_skeleton(campo, valor):
     elif campo == 'nombre':
         return "nya LIKE '" + (parsear_random(valor)) + "'"
     elif campo == 'sexo':
-        return "sexo='" + valor + "'"
+        # return "sexo='" + valor + "'"
+        return "sexo LIKE '" + (parsear_random(valor)) + "'"
     else:
         return 'legajo ' + parsear_intervalo(valor)
 
@@ -180,8 +147,6 @@ def mostrar_valores(registros):
     if isinstance(registros, list):
         for record in registros:
             show_html(record)
-    else:
-        print(no_encontre_html)
 
 
 def show_html(registro):

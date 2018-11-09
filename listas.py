@@ -14,62 +14,25 @@ import psycopg2
 
 
 head_html = '''
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>Sistemas Distribuidos</title>
-    <link rel="stylesheet" href="http://localhost/punto2/css/main.css"
-        type="text/css">
-  </head>
-  <body>
-    <div id="header" align="center">
-      <h1> Sistema de gestion de alumnos</h1>
-    </div>
-    <div class="container">
-      <div id="sidebar">
-        <ul>
-          <li><a href="http://localhost/punto2/index.html">Home</a></li>
-          <li><a href="http://localhost/punto2/alta.html">Alta</a></li>
-          <li><a href="http://localhost/punto2/login.html">
-                            Modificacion</a></li>
-          <li><a href="http://localhost/punto2/busquedas.html">Busquedas</a>
-          </li>
-          <li><a href="http://localhost/punto2/listas.html">Totales</a></li>
-        </ul>
-      </div>
-      <div id="content" >
-        <table>
-          <tr>
-            <th>Sexo</th>
-            <th>Total</th>
-            <th>Promedio</th>
-          </tr>
+    <a href="/punto2">Click para voler al index</a>
+    <hr width="80%" size=3 align="left" noshade>
 '''
 
 
-footer_html = '''
+mostrar_html = '''
+    <table border="1"cellpadding = "5" cellspacing = "5">
+      <tr>
+        <th>Sexo</th>
+        <th>Total</th>
+        <th>Promedio</th>
+      </tr>
+      <tr>
+        <td>%s</td>
+        <td>%s</td>
+        <td>%s</td>
+      </tr>
     </table>
-      </div>
-    <div align="center">
-      <footer class="footer" id="footer">
-        <p> Sistemas Distribuidos  - Aranda Perdomo</p>
-      </footer>
-    </div>
-  </body>
-</html>
-
-'''
-
-encontre_html = '''
-<tr>
-<td>%s</td>
-<td>%s</td>
-<td>%s</td>
-</tr>
-'''
-
-no_encontre_html = '''
+    <br>
 '''
 
 select_sql = '''
@@ -159,9 +122,7 @@ def show_html(registro):
         sexo = registro[0]
         cont = registro[1]
         avg = registro[2]
-        print(encontre_html % (sexo, cont, avg))
-    else:
-        print(no_encontre_html)
+        print(mostrar_html % (sexo, cont, avg))
 
 
 def main():
@@ -175,7 +136,6 @@ def main():
     cgitb.enable()
     print(head_html)
     show_html(obtener_datos(form))  # muestra contenido segun corresponda
-    print(footer_html)
 
 
 if __name__ == '__main__':
