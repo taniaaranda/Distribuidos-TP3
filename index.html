@@ -1,5 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script>
+    function getCookie(){
+      alert("entro log");
+      if(document.cookie.length>0){
+        var decodedCookie = decodeURIComponent(document.cookie);
+        inicio  = decodedCookie.lastIndexOf("=")+1; //si no encontro inicio = 0
+        //final = decodedCookie.lastIndexOf("=");
+        c = unescape(decodedCookie.substring(inicio));
+        document.cookie = "cookie-punto2" + "=" + "false" +"; path=/punto2";
+        alert(document.cookie);
+        return c
+      }
+      alert(vacio);
+      return ""
+    }
+  </script>
   <head>
     <meta charset="UTF-8">
     <title>Sistemas Distribuidos</title>
@@ -28,6 +44,8 @@
         <h2> Crear una nueva cuenta! </h2>
         <button class="button" onclick="location.href='/punto2/alta.html'">Crear
           Cuenta</button>
+        <h2> Cerrar sesion </h2>
+        <button class="button" onclick="location.href='/cgi-bin/punto2/logout.py?newtxt='+ getCookie()">Cerrar sesion</button>
       </div>
     </div>
     <div align="center">
@@ -35,7 +53,10 @@
         <p> Sistemas Distribuidos  - Aranda Perdomo</p>
       </footer>
     </div>
-
+  </head>
   </body>
+   <script type="text/javascript">
+   alert(document.cookie);
+  </script>
 </html>
 

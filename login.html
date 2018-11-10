@@ -1,5 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+  <script>
+    function getCookie(cookie_name) {
+    //document.cookie tiene todas las cookies que posee el browser en
+    //forma de string nombreCookie1=valor1; nombreCookie2=valor2
+    //Los nombres de las cookies son username y valor booleano
+    //ejemplo = "pepe=true; maria=true"
+      if (document.cookie.length>0){
+        var name = cookie_name + "=";
+        //handle cookies with special characters
+        var decodedCookie = decodeURIComponent(document.cookie);
+        inicio = decodedCookie.indexOf(name);
+        if (inicio != -1){
+          inicio = inicio + name.length; //me posiciono despues de name=
+          final = decodedCookie.indexOf(";",inicio);
+          if (final==-1) final = decodedCookie.length;//es el final de la cookie
+          return unescape(decodedCookie.substring(inicio,final)); //retorno valor de cookie
+        }
+      }
+      return ""; //cookie not found
+    }
+  </script>
+  
   <head>
     <meta charset="UTF-8">
     <title>Sistemas Distribuidos</title>
@@ -22,7 +44,7 @@
       <div id="content" >
         <h2> Iniciar sesion </h2>
         <br> <br>
-      <form action=/cgi-bin/punto2/login.py method="post">
+        <form action=/cgi-bin/punto2/login.py method="post">
          Numero de Alumno/Legajo:<br>
           <input type="text" name="legajo" placeholder="9999999"/
                                            max="9999999" required><br><br>
@@ -32,6 +54,7 @@
           <input type="submit" value="Aceptar">
           <input type="reset" value="Limpiar">
       </form>
+      
       </div>
     </div>
     <div align="center">
@@ -40,4 +63,18 @@
       </footer>
     </div>
   </body>
+  <script type="text/javascript">
+    if(document.cookie.length>0 ){
+      var nombre = getCookie("cookie-punto2"); 
+      if(nombre != "false"){
+        var decodedCookie = decodeURIComponent(document.cookie);
+        inicio  = decodedCookie.lastIndexOf("=")+1; //si no encontro inicio = 0
+        //final = decodedCookie.lastIndexOf("=");
+        c = unescape(decodedCookie.substring(inicio));
+        location.href="/cgi-bin/punto2/verificar.py?newtxt="+escape(c);
+        alert("volvio");  
+      }
+      
+    }
+  </script>
 </html>

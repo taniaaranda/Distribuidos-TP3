@@ -29,7 +29,7 @@ login_html = '''
     <title>Redirigiendo..</title>
     <meta http-equiv="refresh" content="0;url=/punto2/login.html" />'
   <script>
-      alert("El alumno no existe");
+      alert("Ingrese");
   </script>
   </head>
   <body></body>
@@ -37,18 +37,8 @@ login_html = '''
 '''
 
 modificar_html = '''
-	<!DOCTYPE html>
-	<html lang="en">
-
-	<script>
-      	function setCookie(sesionid){
-	        alert(sesionid);
-    	    document.cookie = "cookie-punto2" + "=" + sesionid + "; path=/punto2";
-    	    //document.cookie = "cookie-punto2" + "=" + sesionid + ";";
-    	    //document.cookie = "cookie-punto2" + "=" + sesionid + "; path=/punto2/;
-    	    alert("cookies: " + document.cookie);
-      	}
-    </script>
+    <!DOCTYPE html>
+    <html lang="en">
       <h2> Crear sesion </h2>
 
       <form action=/cgi-bin/punto2/modificacion.py method="post">
@@ -73,11 +63,8 @@ modificar_html = '''
           <input type="submit" value="Aceptar">
           <input type="reset" value="Limpiar">
       </form>
-      <script type="text/javascript">
-      	setCookie(%s);
-      </script>
     <body></body>
-	</html>
+    </html>
 '''
 
 
@@ -110,7 +97,7 @@ def destroy_handler(conn):
     conn.close()
 
 
-def   verificar_alumno(values):
+def buscar_alumno(value):
     '''
     Obtiene conexion e verifica que la cola values recibida como parametro,
     exista en tabla alumno .Cierra la conexion al finalizar
@@ -122,15 +109,13 @@ def   verificar_alumno(values):
     try:
         cursor = conn.cursor()
         cursor.execute(
-            'SELECT * from alumno WHERE legajo=%s AND password=%s',
-            (values.popleft(), values.popleft())
+            'SELECT * from alumno WHERE legajo='+value
         )
         registro = cursor.fetchone()  # obtengo como tupla la fila de la query
         destroy_handler(conn)
-        legajo = registro[1]
-        password = registro[4]
         return registro
     except Exception as e:
+        print("error")
         print (e)
 
 
@@ -148,42 +133,31 @@ def parse_sexo_option(sex):
 
 
 def show_html(registro):
-    '''
-    Elige el formulario que le mostrara al usuario, dependiendo de que values
-    (variable que recibe por parametros) contenga datos o no
-    '''
-    if isinstance(registro, tuple):
-        nombre = registro[0]
-        legajo = registro[1]
-        sexo = parse_sexo_option(registro[2])
-        edad = registro[3]
-        password = registro[4]
-        sesionid = guardar_cookie(legajo)
-        print(modificar_html % (nombre, legajo, sexo, edad, password,sesionid))
-        #print(cookie)
-    else:
-        print(login_html)
+    nombre = registro[0]
+    legajo = registro[1]
+    sexo = parse_sexo_option(registro[2])
+    edad = registro[3]
+    password = registro[4]
+    #print(nombre)
+    print(modificar_html % (nombre, legajo, sexo, edad, password))
 
-def guardar_cookie(legajo):
-    
-    sesionid = str(random.randrange(100))
-    with open("sesioncookies.txt",'a+') as f:
-      f.writelines("%s\n" % (str(legajo) +"|"+ sesionid))
-    f.close()
-    return sesionid
 
 def main():
-    '''
-    Intenta dar de alta el alumno y luego muestra
-    el html
-    '''
+
     print('Content-Type: text/html')
     print()
-    form = cgi.FieldStorage()
-    sys.stderr = sys.stdout
-    cgitb.enable()
-    show_html(obtener_datos(form))  # muestra contenido segun corresponda
-    
+    data = cgi.FieldStorage()
+    query = data.getvalue('newtxt')
+    cookie = str(query) + "\n" 
+    with open("sesioncookies.txt",'r') as f:
+        for line in f.readlines():
+            id = line[line.find("|")+1:]
+            if(id.find(cookie)!= -1):
+                legajo= line[:line.find("|")]
+                registro=buscar_alumno(legajo) 
+                show_html(registro)
+    f.close()
+    print(login_html)
 
 
 if __name__ == '__main__':
