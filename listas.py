@@ -20,7 +20,7 @@ head_html = '''
 
 
 mostrar_html = '''
-    <table border="1"cellpadding = "5" cellspacing = "5">
+    <table border="1" cellpadding = "5" cellspacing = "5">
       <tr>
         <th>Sexo</th>
         <th>Total</th>

@@ -27,7 +27,7 @@ htmlFormat = '''
   <head>
     <meta charset="UTF-8">
     <title>Redirigiendo..</title>
-    <meta http-equiv="refresh" content="0;url=/punto2/index.html" />'
+    <meta http-equiv="refresh" content="0;url=/punto2/index.html" />
   <script>
       alert("sesion cerrada");
   </script>
@@ -42,7 +42,7 @@ htmlFormat2 = '''
   <head>
     <meta charset="UTF-8">
     <title>Redirigiendo..</title>
-    <meta http-equiv="refresh" content="0;url=/punto2/index.html" />'
+    <meta http-equiv="refresh" content="0;url=/punto2/index.html" />
   <script>
       alert("no ha iniciado sesion");
   </script>
@@ -140,7 +140,7 @@ def main():
                 lines =f.readlines()
                 f.seek(0)
                 for line in lines:
-                    print(line)
+                    # print(line)
                     id = line[line.find("|")+1:]
                     if(id.find(cookie)!= -1):
                         f.write("")

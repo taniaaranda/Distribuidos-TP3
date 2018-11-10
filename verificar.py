@@ -8,26 +8,26 @@ Si el usuario existe muestra sus datos para modificacion, sino el login
 '''
 
 
-import sys
+# import sys
 import cgi
-import cgitb
-from collections import deque
+# import cgitb
+# from collections import deque
 import psycopg2
-from http.cookies import SimpleCookie
-from datetime import datetime, timedelta
-from hashlib import md5
-import json
-import http
-import random
+# from http.cookies import SimpleCookie
+# from datetime import datetime, timedelta
+# from hashlib import md5
+# import json
+# import http
+# import random
 
 
 login_html = '''
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>Redirigiendo..</title>
-    <meta http-equiv="refresh" content="0;url=/punto2/login.html" />'
+    <meta http-equiv="refresh" content="0;url=/punto2/login.html"/>
   <script>
       alert("Ingrese");
   </script>
@@ -39,11 +39,12 @@ login_html = '''
 modificar_html = '''
     <!DOCTYPE html>
     <html lang="en">
-      <h2> Crear sesion </h2>
+    <a href="/punto2">Click para voler al index</a>
+      <h2>Modificar sesion</h2>
 
       <form action=/cgi-bin/punto2/modificacion.py method="post">
           Nombre y Apellido:<br>
-          <input type="text" id="nombre" placeholder="Nombre y Apellido"/
+          <input type="text" name="nombre" placeholder="Nombre y Apellido"/
                                  value="%s" maxlength="70" autofocus required>
           <br><br>
           Numero de Alumno/Legajo:<br>
@@ -59,7 +60,7 @@ modificar_html = '''
           Password:<br>
           <input type="password" name="password" placeholder="Ingresa clave"
                                         value="%s" required><br><br>
-          
+
           <input type="submit" value="Aceptar">
           <input type="reset" value="Limpiar">
       </form>
@@ -72,10 +73,8 @@ def obtener_datos(form):
     '''
     obtiene los datos del login.html y se los envia a verificar_alumno
     '''
-    legajo = form.getvalue("legajo")
-    password = form.getvalue('password')
-    values = deque([legajo, password])
-    return verificar_alumno(values)
+    legajo = form.getvalue('legajo')
+    return buscar_alumno(legajo)
 
 
 def crear_handler():
@@ -109,7 +108,7 @@ def buscar_alumno(value):
     try:
         cursor = conn.cursor()
         cursor.execute(
-            'SELECT * from alumno WHERE legajo='+value
+            'SELECT * from alumno WHERE legajo=%s' % value
         )
         registro = cursor.fetchone()  # obtengo como tupla la fila de la query
         destroy_handler(conn)
@@ -138,7 +137,6 @@ def show_html(registro):
     sexo = parse_sexo_option(registro[2])
     edad = registro[3]
     password = registro[4]
-    #print(nombre)
     print(modificar_html % (nombre, legajo, sexo, edad, password))
 
 
@@ -148,19 +146,19 @@ def main():
     print()
     data = cgi.FieldStorage()
     query = data.getvalue('newtxt')
-    cookie = str(query) + "\n" 
-    encontro = False 
-    with open("sesioncookies.txt",'r') as f:
+    cookie = str(query) + "\n"
+    encontro = False
+    with open("sesioncookies.txt", 'r') as f:
         for line in f.readlines():
             id = line[line.find("|")+1:]
-            if(id.find(cookie)!= -1):
-                legajo= line[:line.find("|")]
-                registro=buscar_alumno(legajo) 
+            if(id.find(cookie) != -1):
+                legajo = line[:line.find("|")]
+                registro = buscar_alumno(legajo)
                 show_html(registro)
                 encontro = True
                 break
     f.close()
-    if(encontro != True):
+    if(not encontro):
         print(login_html)
 
 

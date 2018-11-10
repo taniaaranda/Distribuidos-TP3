@@ -13,11 +13,11 @@ import cgi
 import cgitb
 from collections import deque
 import psycopg2
-from http.cookies import SimpleCookie
-from datetime import datetime, timedelta
-from hashlib import md5
-import json
-import http
+# from http.cookies import SimpleCookie
+# from datetime import datetime, timedelta
+# from hashlib import md5
+# import json
+# import http
 import random
 
 
@@ -27,7 +27,7 @@ login_html = '''
   <head>
     <meta charset="UTF-8">
     <title>Redirigiendo..</title>
-    <meta http-equiv="refresh" content="0;url=/punto2/login.html" />'
+    <meta http-equiv="refresh" content="0;url=/punto2/login.html" />
   <script>
       alert("El alumno no existe");
   </script>
@@ -37,19 +37,22 @@ login_html = '''
 '''
 
 modificar_html = '''
-	<!DOCTYPE html>
-	<html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-	<script>
-      	function setCookie(sesionid){
-    	    document.cookie = "cookie-punto2" + "=" + sesionid + "; path=/punto2";
-      	}
+    <script>
+    function setCookie(sesionid){
+        document.cookie = "cookie-punto2" + "=" + sesionid + "; path=/punto2";
+    }
     </script>
-      <h2> Crear sesion </h2>
+<body>
+
+    <a href="/punto2">Click para voler al index</a>
+    <h2>Modificar Datos</h2>
 
       <form action=/cgi-bin/punto2/modificacion.py method="post">
           Nombre y Apellido:<br>
-          <input type="text" id="nombre" placeholder="Nombre y Apellido"/
+          <input type="text" name="nombre" placeholder="Nombre y Apellido"/
                                  value="%s" maxlength="70" autofocus required>
           <br><br>
           Numero de Alumno/Legajo:<br>
@@ -65,15 +68,15 @@ modificar_html = '''
           Password:<br>
           <input type="password" name="password" placeholder="Ingresa clave"
                                         value="%s" required><br><br>
-          
+
           <input type="submit" value="Aceptar">
           <input type="reset" value="Limpiar">
       </form>
       <script type="text/javascript">
-      	setCookie(%s);
+      setCookie(%s);
       </script>
-    <body></body>
-	</html>
+    </body>
+</html>
 '''
 
 
@@ -106,7 +109,7 @@ def destroy_handler(conn):
     conn.close()
 
 
-def   verificar_alumno(values):
+def verificar_alumno(values):
     '''
     Obtiene conexion e verifica que la cola values recibida como parametro,
     exista en tabla alumno .Cierra la conexion al finalizar
@@ -123,8 +126,8 @@ def   verificar_alumno(values):
         )
         registro = cursor.fetchone()  # obtengo como tupla la fila de la query
         destroy_handler(conn)
-        legajo = registro[1]
-        password = registro[4]
+        # legajo = registro[1]
+        # password = registro[4]
         return registro
     except Exception as e:
         print (e)
@@ -155,18 +158,19 @@ def show_html(registro):
         edad = registro[3]
         password = registro[4]
         sesionid = guardar_cookie(legajo)
-        print(modificar_html % (nombre, legajo, sexo, edad, password,sesionid))
-        #print(cookie)
+        print(modificar_html %
+              (nombre, legajo, sexo, edad, password, sesionid))
     else:
         print(login_html)
 
+
 def guardar_cookie(legajo):
-    
-    sesionid = str(random.randrange(10000000,99999999))
-    with open("sesioncookies.txt",'a+') as f:
-      f.writelines("%s\n" % (str(legajo) +"|"+ sesionid))
+    sesionid = str(random.randrange(10000000, 99999999))
+    with open("sesioncookies.txt", 'a+') as f:
+        f.writelines("%s\n" % (str(legajo) + "|" + sesionid))
     f.close()
     return sesionid
+
 
 def main():
     '''
@@ -179,7 +183,6 @@ def main():
     sys.stderr = sys.stdout
     cgitb.enable()
     show_html(obtener_datos(form))  # muestra contenido segun corresponda
-    
 
 
 if __name__ == '__main__':

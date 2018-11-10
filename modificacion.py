@@ -18,9 +18,9 @@ htmlFormat = '''
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>Redirigiendo..</title>
-    <meta http-equiv="refresh" content="0;url=/punto2" />'
+    <meta http-equiv="refresh" content="0;url=/punto2" />
   <script>
       alert("El alumno ha sido modificado!");
   </script>
@@ -28,6 +28,11 @@ htmlFormat = '''
   <body></body>
 </html>
 '''
+
+
+update_sql = """
+UPDATE alumno SET (nya,sexo,edad,password)=('%s', '%s', %s, %s) WHERE legajo=%s
+"""
 
 
 def modificar_alumno(form):
@@ -39,7 +44,7 @@ def modificar_alumno(form):
     sexo = form.getvalue('sexo')
     edad = form.getvalue('edad')
     password = form.getvalue('password')
-    legajo = form.getvalue("legajo")
+    legajo = form.getvalue('legajo')
     values = deque([nombre, sexo, edad, password, legajo])
     update_alumno(values)
 
@@ -74,15 +79,14 @@ def update_alumno(values):
         print ('Error: el servidor no se pudo conectar a la base de datos')
     try:
         cursor = conn.cursor()
-        cursor.execute(
-            'UPDATE alumno SET (nya,sexo,edad,password)'
-            ' = (%s, %s, %s, %s) WHERE legajo = %s',
-            (values.popleft(), values.popleft(), values.popleft(),
-             values.popleft(), values.popleft())
-        )
+        cursor.execute(update_sql %
+                       (values.popleft(), values.popleft(), values.popleft(),
+                        values.popleft(), values.popleft()
+                        )
+                       )
         destroy_handler(conn)
     except Exception as e:
-        print (e)
+        print(e)
 
 
 def main():
