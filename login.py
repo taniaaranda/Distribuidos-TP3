@@ -42,11 +42,7 @@ modificar_html = '''
 
 	<script>
       	function setCookie(sesionid){
-	        alert(sesionid);
     	    document.cookie = "cookie-punto2" + "=" + sesionid + "; path=/punto2";
-    	    //document.cookie = "cookie-punto2" + "=" + sesionid + ";";
-    	    //document.cookie = "cookie-punto2" + "=" + sesionid + "; path=/punto2/;
-    	    alert("cookies: " + document.cookie);
       	}
     </script>
       <h2> Crear sesion </h2>
@@ -166,7 +162,7 @@ def show_html(registro):
 
 def guardar_cookie(legajo):
     
-    sesionid = str(random.randrange(100))
+    sesionid = str(random.randrange(10000000,99999999))
     with open("sesioncookies.txt",'a+') as f:
       f.writelines("%s\n" % (str(legajo) +"|"+ sesionid))
     f.close()

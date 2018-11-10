@@ -149,6 +149,7 @@ def main():
     data = cgi.FieldStorage()
     query = data.getvalue('newtxt')
     cookie = str(query) + "\n" 
+    encontro = False 
     with open("sesioncookies.txt",'r') as f:
         for line in f.readlines():
             id = line[line.find("|")+1:]
@@ -156,8 +157,11 @@ def main():
                 legajo= line[:line.find("|")]
                 registro=buscar_alumno(legajo) 
                 show_html(registro)
+                encontro = True
+                break
     f.close()
-    print(login_html)
+    if(encontro != True):
+        print(login_html)
 
 
 if __name__ == '__main__':

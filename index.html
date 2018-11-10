@@ -2,17 +2,14 @@
 <html lang="en">
   <script>
     function getCookie(){
-      alert("entro log");
       if(document.cookie.length>0){
         var decodedCookie = decodeURIComponent(document.cookie);
         inicio  = decodedCookie.lastIndexOf("=")+1; //si no encontro inicio = 0
         //final = decodedCookie.lastIndexOf("=");
         c = unescape(decodedCookie.substring(inicio));
         document.cookie = "cookie-punto2" + "=" + "false" +"; path=/punto2";
-        alert(document.cookie);
         return c
       }
-      alert(vacio);
       return ""
     }
   </script>
@@ -55,8 +52,5 @@
     </div>
   </head>
   </body>
-   <script type="text/javascript">
-   alert(document.cookie);
-  </script>
 </html>
 
