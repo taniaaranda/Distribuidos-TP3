@@ -118,7 +118,7 @@ function registrarUser(usrText,targetDiv,users_div){
     alert("Bienvenido "+ getCookieName());
     users.innerHTML = unescape(reqObj.responseText); //lo hace submitHandler??
     users.scrollTop = users.scrollHeight;
-    submitHandler(usrText, targetDiv);
+    newUser(usrText, targetDiv);
     texto.disabled=false; //habilito escritura en chat
     
     var entorno = setInterval(function(){actualizar()},1000);
@@ -135,6 +135,24 @@ function getReqObj() {
   return XMLHttpRequestObject;
 }
 
+
+function newUser(txtID, divID)
+{
+  var theText = document.getElementById(txtID);
+  var theArea = document.getElementById(divID);
+  var username = getCookieName();
+  var reqObj = getReqObj();
+  if (username!=""){ 
+    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p><i>" + username +" ha iniciado sesion</i></p>");
+  }
+  reqObj.open("GET", url, false);
+  reqObj.send(null);
+  theArea.innerHTML = unescape(reqObj.responseText);
+  theArea.scrollTop = theArea.scrollHeight;
+  theText.value = "";
+  return false;
+}
+
 function submitHandler(txtID, divID)
 {
   var theText = document.getElementById(txtID);
@@ -142,9 +160,7 @@ function submitHandler(txtID, divID)
   var username = getCookieName();
   var reqObj = getReqObj();
   if (username!=""){ 
-    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + username +":"+ theText.value + "</p>");
-  }else{
-    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p>" + theText.value + "</p>"); 
+    var url="/cgi-bin/punto5/textchat?newtxt=" + escape("<p><b>" + username +"</b>:"+ theText.value + "</p>");
   }
   reqObj.open("GET", url, false);
   reqObj.send(null);
