@@ -44,7 +44,7 @@ htmlFormat2 = '''
     <title>Redirigiendo..</title>
     <meta http-equiv="refresh" content="0;url=/punto2/index.html" />'
   <script>
-      alert("no tiene sesion");
+      alert("no ha iniciado sesion");
   </script>
   </head>
   <body></body>
@@ -132,22 +132,25 @@ def main():
     data = cgi.FieldStorage()
     query = data.getvalue('newtxt')
     cookie = str(query)
-    print(len(cookie))
     if(len(cookie)>4): 
         cookie = cookie + "\n"
+        encontro = False
         try:
             with open("sesioncookies.txt",'r+') as f:
-                print("abrio")
                 lines =f.readlines()
                 f.seek(0)
                 for line in lines:
                     print(line)
                     id = line[line.find("|")+1:]
                     if(id.find(cookie)!= -1):
-                        print(" es igual")
                         f.write("")
+                        encontro = True
+                        break
                 f.truncate()
-                print(htmlFormat)
+                if(encontro):
+                    print(htmlFormat)
+                else:
+                    print(htmlFormat2)            
             f.close()
         except IOError:
             print("error")
